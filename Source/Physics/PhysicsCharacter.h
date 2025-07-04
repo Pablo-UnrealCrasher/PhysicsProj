@@ -104,6 +104,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Config, meta = (AllowPrivateAccess = "true"))
 	float m_BaseInterpolationSpeed = 1000.f;
 
+	UPROPERTY()
+	FRotator m_GrabbedObjectRelativeRotation;
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = DebugData, meta = (AllowPrivateAccess = "true"))
 	UMeshComponent* m_HighlightedMesh = nullptr;

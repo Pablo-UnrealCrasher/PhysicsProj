@@ -92,7 +92,9 @@ void APhysicsCharacter::Tick(float DeltaSeconds)
 
 	// Grabbed object update
 	m_PhysicsHandle->SetTargetLocation(GetFirstPersonCameraComponent()->GetComponentLocation() + GetFirstPersonCameraComponent()->GetForwardVector() * m_GrabDistance);
-	m_PhysicsHandle->SetTargetRotation(GetFirstPersonCameraComponent()->GetComponentRotation());
+
+	FRotator targetRotation = FirstPersonCameraComponent->GetComponentRotation() + m_GrabbedObjectRelativeRotation;
+	m_PhysicsHandle->SetTargetRotation(FRotator(-targetRotation.Pitch, targetRotation.Yaw, targetRotation.Roll));
 }
 
 void APhysicsCharacter::NotifyControllerChanged()
@@ -191,12 +193,14 @@ void APhysicsCharacter::GrabObject(const FInputActionValue& Value)
 		FirstPersonCameraComponent->GetComponentLocation() + FirstPersonCameraComponent->GetForwardVector() * m_MaxGrabDistance,
 		ECC_Visibility))
 	{
-		m_PhysicsHandle->GrabComponentAtLocationWithRotation(Hit.GetComponent(), Hit.BoneName, Hit.Location, Hit.Component->GetComponentRotation());
-		m_PhysicsHandle->InterpolationSpeed = m_BaseInterpolationSpeed / (Hit.GetComponent()->GetMass() / 2.0f);
-		m_GrabDistance = Hit.Distance;
-		
 		UActorComponent* ActorComponent = Hit.GetActor()->GetComponentByClass(UMeshComponent::StaticClass());
 		SetHighlightedMesh(Cast<UMeshComponent>(ActorComponent));
+
+		m_GrabDistance = Hit.Distance;
+		m_PhysicsHandle->InterpolationSpeed = m_BaseInterpolationSpeed / (Hit.GetComponent()->GetMass() / 2.0f);
+		m_PhysicsHandle->GrabComponentAtLocationWithRotation(Hit.GetComponent(), Hit.BoneName, Hit.Location, Hit.GetComponent()->GetComponentRotation());
+
+		m_GrabbedObjectRelativeRotation = Hit.GetComponent()->GetComponentRotation() - FirstPersonCameraComponent->GetComponentRotation();
 	}
 }
 
