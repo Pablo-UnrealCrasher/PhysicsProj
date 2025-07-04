@@ -93,8 +93,8 @@ void APhysicsCharacter::Tick(float DeltaSeconds)
 	// Grabbed object update
 	m_PhysicsHandle->SetTargetLocation(GetFirstPersonCameraComponent()->GetComponentLocation() + GetFirstPersonCameraComponent()->GetForwardVector() * m_GrabDistance);
 
-	FRotator targetRotation = FirstPersonCameraComponent->GetComponentRotation() + m_GrabbedObjectRelativeRotation;
-	m_PhysicsHandle->SetTargetRotation(FRotator(-targetRotation.Pitch, targetRotation.Yaw, targetRotation.Roll));
+	FRotator CameraRotation = FirstPersonCameraComponent->GetComponentRotation();
+	m_PhysicsHandle->SetTargetRotation(FRotator(-CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll) + m_GrabbedObjectRelativeRotation);
 }
 
 void APhysicsCharacter::NotifyControllerChanged()
@@ -200,7 +200,8 @@ void APhysicsCharacter::GrabObject(const FInputActionValue& Value)
 		m_PhysicsHandle->InterpolationSpeed = m_BaseInterpolationSpeed / (Hit.GetComponent()->GetMass() / 2.0f);
 		m_PhysicsHandle->GrabComponentAtLocationWithRotation(Hit.GetComponent(), Hit.BoneName, Hit.Location, Hit.GetComponent()->GetComponentRotation());
 
-		m_GrabbedObjectRelativeRotation = Hit.GetComponent()->GetComponentRotation() - FirstPersonCameraComponent->GetComponentRotation();
+		FRotator CameraRotation = FirstPersonCameraComponent->GetComponentRotation();
+		m_GrabbedObjectRelativeRotation = Hit.GetComponent()->GetComponentRotation() - FRotator(-CameraRotation.Pitch, CameraRotation.Yaw, CameraRotation.Roll);
 	}
 }
 
