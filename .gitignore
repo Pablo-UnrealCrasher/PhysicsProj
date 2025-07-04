@@ -77,12 +77,3 @@ Plugins/**/Intermediate/*
 DerivedDataCache/*
 .idea
 *.DotSettings.user
-
-# FMod Files to ignore
-
-Plugins/FMODStudio/Docs
-Plugins/FMODStudio/Resources
-Plugins/FMODStudio/Intermediate
-Plugins/FMODStudioNiagara/Intermediate
-!Plugins/FMODStudio/Binaries/*.dll
-!Plugins/FMODStudio/Binaries/*.lib 
