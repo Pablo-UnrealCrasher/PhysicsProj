@@ -11,6 +11,7 @@
 #include "Animation/AnimInstance.h"
 #include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
+#include "Field/FieldSystemActor.h"
 
 // Sets default values for this component's properties
 UPhysicsWeaponComponent::UPhysicsWeaponComponent()
@@ -19,12 +20,6 @@ UPhysicsWeaponComponent::UPhysicsWeaponComponent()
 	MuzzleOffset = FVector(100.0f, 0.0f, 10.0f);
 
 }
-
-void UPhysicsWeaponComponent::BeginPlay()
-{
-	Super::BeginPlay();
-}
-
 
 void UPhysicsWeaponComponent::Fire()
 {
@@ -140,5 +135,7 @@ void UPhysicsWeaponComponent::ApplyDamage(const FHitResult& HitResult) const
 			m_WeaponDamageType->m_DamageType);
 		break;
 	}
-}
 
+	FTransform FsMasterFieldTransform = FTransform((-HitResult.ImpactNormal).Rotation(), HitResult.ImpactPoint, FVector::One());
+	GetWorld()->SpawnActor(m_FsMasterField, &FsMasterFieldTransform, FActorSpawnParameters());
+}

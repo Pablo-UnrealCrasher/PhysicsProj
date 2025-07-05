@@ -40,6 +40,9 @@ public:
 	UPROPERTY(Instanced, EditAnywhere, BlueprintReadOnly, Category=Damage, meta=(AllowPrivateAccess = "true"))
 	UWeaponDamageType* m_WeaponDamageType;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Damage)
+	TSubclassOf<AActor> m_FsMasterField;
+
 	/** Sets default values for this component's properties */
 	UPhysicsWeaponComponent();	
 
@@ -53,7 +56,6 @@ public:
 
 protected:
 
-	virtual void BeginPlay() override;
 	/** Ends gameplay for this component. */
 	UFUNCTION()
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
